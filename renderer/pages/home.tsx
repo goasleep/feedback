@@ -1,50 +1,36 @@
-import React from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
+import React from "react";
+import Head from "next/head";
+import Link from "next/link";
 import {
   Layout,
   Form,
   Select,
   InputNumber,
+  Menu,
   DatePicker,
   Switch,
   Slider,
   Button,
-} from 'antd';
+} from "antd";
+import { ipcRenderer } from "electron";
 
-const {
-  Header,
-  Content,
-} = Layout;
+const { Header, Content, Sider } = Layout;
 const { Item: FormItem } = Form;
 const { Option } = Select;
 
 function Home() {
+  const onClick = async () => {
+    const c = await ipcRenderer.invoke("create", { content: 1 });
+  };
   return (
     <React.Fragment>
       <Head>
         <title>Home - Nextron (with-javascript-ant-design)</title>
       </Head>
-
-      <Header>
-        <Link href="/next">
-          <a>Go to next page</a>
-        </Link>
-      </Header>
-
       <Content style={{ padding: 48 }}>
-        <Form layout='horizontal'>
+        <Form layout="horizontal">
           <FormItem
-            label='Input Number'
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
-          >
-            <InputNumber size='large' min={1} max={10} style={{ width: 100 }} defaultValue={3} name='inputNumber' />
-            <a href='#'>Link</a>
-          </FormItem>
-
-          <FormItem
-            label='Switch'
+            label="Switch"
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 8 }}
           >
@@ -52,7 +38,7 @@ function Home() {
           </FormItem>
 
           <FormItem
-            label='Slider'
+            label="Slider"
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 8 }}
           >
@@ -60,33 +46,41 @@ function Home() {
           </FormItem>
 
           <FormItem
-            label='Select'
+            label="Select"
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 8 }}
           >
-            <Select size='large' defaultValue='lucy' style={{ width: 192 }}>
-              <Option value='jack'>jack</Option>
-              <Option value='lucy'>lucy</Option>
-              <Option value='disabled' disabled>disabled</Option>
-              <Option value='yiminghe'>yiminghe</Option>
+            <Select size="large" defaultValue="lucy" style={{ width: 192 }}>
+              <Option value="jack">jack</Option>
+              <Option value="lucy">lucy</Option>
+              <Option value="disabled" disabled>
+                disabled
+              </Option>
+              <Option value="yiminghe">yiminghe</Option>
             </Select>
           </FormItem>
 
           <FormItem
-            label='DatePicker'
+            label="DatePicker"
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 8 }}
           >
-            <DatePicker name='startDate' />
+            <DatePicker name="startDate" />
           </FormItem>
           <FormItem
             style={{ marginTop: 48 }}
             wrapperCol={{ span: 8, offset: 8 }}
           >
-            <Button size='large' type='primary' htmlType='submit'>
+            <Button
+              size="large"
+              type="primary"
+              htmlType="submit"
+              // onClick={onClick}
+              onClick={onClick}
+            >
               OK
             </Button>
-            <Button size='large' style={{ marginLeft: 8 }}>
+            <Button size="large" style={{ marginLeft: 8 }}>
               Cancel
             </Button>
           </FormItem>
@@ -94,6 +88,6 @@ function Home() {
       </Content>
     </React.Fragment>
   );
-};
+}
 
 export default Home;

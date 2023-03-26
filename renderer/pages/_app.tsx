@@ -1,15 +1,49 @@
 import React from "react";
-import Head from "next/head";
 import type { AppProps } from "next/app";
+import { Layout, Menu } from "antd";
+import { useRouter } from "next/router";
+import { FundProjectionScreenOutlined, SendOutlined } from "@ant-design/icons";
+const { Sider, Content } = Layout;
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+  const items = [
+    {
+      key: 1,
+      label: "列表",
+      path: "/feedbackList",
+      icon: <FundProjectionScreenOutlined />,
+    },
+    {
+      key: 2,
+      label: "新建",
+      path: "/new",
+      icon: <SendOutlined />,
+    },
+  ];
+  const switchMenu = ({ item }) => {
+    router.push(item.props.path);
+  };
   return (
-    <React.Fragment>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
-      <Component {...pageProps} />
-    </React.Fragment>
+    <Layout style={{ height: "100vh" }}>
+      <Sider theme="light" collapsible>
+        <Menu
+          defaultSelectedKeys={["1"]}
+          mode="inline"
+          items={items}
+          onClick={switchMenu}
+        />
+      </Sider>
+
+      <Layout>
+        <Content style={{ overflow: "auto", scrollbarWidth: "none" }}>
+          <React.Fragment>
+            <Component {...pageProps} />
+          </React.Fragment>
+        </Content>
+      </Layout>
+    </Layout>
+    // </div>
   );
 }
 
