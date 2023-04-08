@@ -2,7 +2,11 @@ import React from "react";
 import type { AppProps } from "next/app";
 import { Layout, Menu } from "antd";
 import { useRouter } from "next/router";
-import { FundProjectionScreenOutlined, SendOutlined } from "@ant-design/icons";
+import {
+  FundProjectionScreenOutlined,
+  SendOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 const { Sider, Content } = Layout;
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -10,8 +14,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   const items = [
     {
       key: 1,
-      label: "列表",
-      path: "/feedbackList",
+      label: "查询",
+      path: "/home",
       icon: <FundProjectionScreenOutlined />,
     },
     {
