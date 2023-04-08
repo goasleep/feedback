@@ -27,7 +27,7 @@ const columns = [
   },
   {
     title: "描述",
-    dataIndex: "decs",
+    dataIndex: "desc",
     width: "65%",
   },
 ];
@@ -56,8 +56,9 @@ export default ({ name }) => {
       <div ref={ref}>
         <Paragraph>
           {feedbackData?.name} 家长您好。以下是{feedbackData?.date}
-          {feedbackData?.timeRange[0]}-{feedbackData?.timeRange[1]}
-          化学课程的反馈
+          {"  "}
+          {feedbackData?.timeRange[0]?.split(":")?.[0]}点 ~
+          {feedbackData?.timeRange[1]?.split(":")?.[0]}点 化学课程的反馈
         </Paragraph>
         <Title level={2}>课堂名称：{feedbackData?.classname}</Title>
         <Title level={3}>上周作业完成情况: </Title>
@@ -67,7 +68,7 @@ export default ({ name }) => {
           <ol>
             {feedbackData?.errorPoint?.map((item) => (
               <li key={genKey()}>
-                {item.title}: {item.decs}
+                {item.title}: {item.desc}
               </li>
             ))}
           </ol>
@@ -89,19 +90,11 @@ export default ({ name }) => {
           <ol>
             {feedbackData?.masterPoint?.map((item) => (
               <li key={genKey()}>
-                {item.title}: {item.decs}
+                {item.title}: {item.desc}
               </li>
             ))}
           </ol>
         </Paragraph>
-        {/* <Title level={5}> 掌握情况</Title>
-        <Paragraph>
-          <Table
-            dataSource={feedbackData?.masterPoint}
-            columns={columns}
-            pagination={false}
-          />
-        </Paragraph> */}
         <Title level={3}> 课后作业</Title>
         <Paragraph>{feedbackData?.homeworkError} </Paragraph>
       </div>

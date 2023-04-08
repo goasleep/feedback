@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
 import db from "./datastore";
+import lo from "lodash";
 const fs = require("fs");
 const path = require("path");
 
@@ -58,6 +59,46 @@ ipcMain.handle("getAllName", async (event) => {
     .map((item) => item.name)
     .value();
   return doc;
+});
+
+ipcMain.handle("searchClass", async (event) => {
+  const class_ = await db
+    .get("docs")
+    .map((item) => item?.classname)
+    .value();
+  return Array.from(new Set(lo.flattenDeep(class_))).map((item) => ({
+    value: item,
+  }));
+});
+
+ipcMain.handle("searchKnowledge", async (event, keyword) => {
+  const points = await db
+    .get("docs")
+    .map((item) =>
+      [...(item?.errorPoint || []), ...(item?.masterPoint || [])]
+        .map((item) =>
+          Array.isArray(item?.title) ? item?.title?.[0] : item.title
+        )
+        .filter((item) => item?.includes(keyword))
+    )
+    .value();
+  return Array.from(new Set(lo.flattenDeep(points))).map((item) => ({
+    value: item,
+  }));
+});
+
+ipcMain.handle("searchKnowledgeDesc", async (event, keyword) => {
+  const points = await db
+    .get("docs")
+    .map((item) =>
+      [...(item?.errorPoint || []), ...(item?.masterPoint || [])]
+        .map((item) => item.desc)
+        .filter((item) => item?.includes(keyword))
+    )
+    .value();
+  return Array.from(new Set(lo.flattenDeep(points))).map((item) => ({
+    value: item,
+  }));
 });
 
 let pdfWindow: BrowserWindow | null = null;

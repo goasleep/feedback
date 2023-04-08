@@ -1,5 +1,4 @@
 import {
-  EditableProTable,
   ProForm,
   ProFormText,
   ProFormRate,
@@ -10,71 +9,18 @@ import {
   ProFormDatePicker,
   ProFormTimePicker,
 } from "@ant-design/pro-components";
-import { Input, message, Select, Space } from "antd";
+import { Input, message, Space } from "antd";
 import { ipcRenderer } from "electron";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useGetFeedback } from "../hook/useGetFeedback";
 import { useRouter } from "next/router";
-
-const columns = [
-  {
-    title: "知识点",
-    dataIndex: "title",
-    width: "25%",
-    renderFormItem: (_, { record }) => (
-      <Select mode="tags" style={{ width: "100%" }} options={options} />
-    ),
-  },
-  {
-    title: "描述",
-    dataIndex: "decs",
-    width: "65%",
-    renderFormItem: (_, { record }) => {
-      return <Input />;
-    },
-  },
-  {
-    title: "操作",
-    valueType: "option",
-  },
-];
-
-const errorColumns = [
-  {
-    title: "错误知识点",
-    dataIndex: "title",
-    width: "25%",
-    renderFormItem: (_, { record }) => (
-      <Select mode="tags" style={{ width: "100%" }} options={options} />
-    ),
-  },
-  {
-    title: "描述",
-    dataIndex: "decs",
-    width: "65%",
-    renderFormItem: (_, { record }) => {
-      return <Input.TextArea showCount />;
-    },
-  },
-  {
-    title: "操作",
-    valueType: "option",
-  },
-];
-
-const options = [];
+import KnowledgePointList from "../components/KnowledgePointList";
+import AutoCompleteSearch from "../components/AutoCompleteSearch";
 
 export default () => {
   const router = useRouter();
   const { query } = router;
   const feedbackData = useGetFeedback(query.name);
-  const [editableKeys, setEditableRowKeys] = useState();
-  const [errorEditableKeys, setErrorEditableRowKeys] = useState();
-
-  useEffect(() => {
-    setEditableRowKeys(feedbackData?.masterPoint?.map((item) => item.id));
-    setErrorEditableRowKeys(feedbackData?.errorPoint?.map((item) => item.id));
-  }, [feedbackData, setEditableRowKeys]);
 
   return (
     feedbackData && (
@@ -104,12 +50,15 @@ export default () => {
             placeholder="请输入姓名"
             rules={[{ required: true }]}
           />
-          <ProFormText
+          <ProForm.Item
             name="classname"
             label="课堂名称"
             width="xl"
             rules={[{ required: true }]}
-          />
+            style={{ width: "300px" }}
+          >
+            <AutoCompleteSearch component={<Input />} searchKey="searchClass" />
+          </ProForm.Item>
           <Space>
             <ProFormDatePicker
               name="date"
@@ -136,28 +85,8 @@ export default () => {
               parser: (value) => value?.replace("%", ""),
             }}
           />
-          <ProForm.Item name="errorPoint" trigger="onValuesChange">
-            <EditableProTable
-              rowKey="id"
-              toolBarRender={false}
-              columns={columns}
-              recordCreatorProps={{
-                newRecordType: "dataSource",
-                record: () => ({
-                  id: Date.now(),
-                }),
-              }}
-              editable={{
-                type: "multiple",
-                editableKeys,
-                onChange: setEditableRowKeys,
-                actionRender: (row, _, dom) => {
-                  return [dom.delete];
-                },
-              }}
-            />
-          </ProForm.Item>
         </ProFormGroup>
+        <KnowledgePointList name={"errorPoint"} />
         <ProFormGroup title="上课状态">
           <ProFormRate name="progressRate" />
           <ProFormSelect
@@ -175,27 +104,7 @@ export default () => {
           />
         </ProFormGroup>
         <ProFormGroup title="掌握情况">
-          <ProForm.Item name="masterPoint" trigger="onValuesChange">
-            <EditableProTable
-              rowKey="id"
-              toolBarRender={false}
-              columns={columns}
-              recordCreatorProps={{
-                newRecordType: "dataSource",
-                record: () => ({
-                  id: Date.now(),
-                }),
-              }}
-              editable={{
-                type: "multiple",
-                editableKeys,
-                onChange: setEditableRowKeys,
-                actionRender: (row, _, dom) => {
-                  return [dom.delete];
-                },
-              }}
-            />
-          </ProForm.Item>
+          <KnowledgePointList name={"masterPoint"} />
         </ProFormGroup>
 
         <ProFormGroup title="课后作业">

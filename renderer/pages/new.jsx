@@ -1,5 +1,4 @@
 import {
-  EditableProTable,
   ProForm,
   ProFormText,
   ProFormRate,
@@ -10,69 +9,16 @@ import {
   ProFormDatePicker,
   ProFormTimePicker,
 } from "@ant-design/pro-components";
-import { Input, message, Select, Space } from "antd";
+import { Input, message, Space } from "antd";
 import { ipcRenderer } from "electron";
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/router";
-
-const { TextArea } = Input;
-
-const columns = [
-  {
-    title: "知识点",
-    dataIndex: "title",
-    width: "25%",
-    renderFormItem: (_, { record }) => (
-      <Select mode="tags" style={{ width: "100%" }} options={options} />
-    ),
-  },
-  {
-    title: "描述",
-    dataIndex: "decs",
-    width: "65%",
-    valueType: "textarea",
-    // renderFormItem: (_, { record }) => {
-    //   return <TextArea showCount maxLength={100} />;
-    // },
-  },
-  {
-    title: "操作",
-    valueType: "option",
-  },
-];
-
-const errorColumns = [
-  {
-    title: "错误知识点",
-    dataIndex: "title",
-    width: "25%",
-    renderFormItem: (_, { record }) => (
-      <Select mode="tags" style={{ width: "100%" }} options={options} />
-    ),
-  },
-  {
-    title: "描述",
-    dataIndex: "decs",
-    width: "65%",
-    renderFormItem: (_, { record }) => {
-      return <Input />;
-    },
-  },
-  {
-    title: "操作",
-    valueType: "option",
-  },
-];
-
-const options = [];
+import KnowledgePointList from "../components/KnowledgePointList";
+import AutoCompleteSearch from "../components/AutoCompleteSearch";
 
 export default () => {
   const router = useRouter();
   const { query } = router;
-  const [editableKeys, setEditableRowKeys] = useState();
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-  };
 
   return (
     <ProForm
@@ -102,12 +48,15 @@ export default () => {
           placeholder="请输入姓名"
           rules={[{ required: true }]}
         />
-        <ProFormText
+        <ProForm.Item
           name="classname"
           label="课堂名称"
           width="xl"
           rules={[{ required: true }]}
-        />
+          style={{ width: "300px" }}
+        >
+          <AutoCompleteSearch component={<Input />} searchKey="searchClass" />
+        </ProForm.Item>
         <Space>
           <ProFormDatePicker
             name="date"
@@ -134,28 +83,7 @@ export default () => {
             parser: (value) => value?.replace("%", ""),
           }}
         />
-
-        <ProForm.Item name="errorPoint" trigger="onValuesChange">
-          <EditableProTable
-            rowKey="id"
-            toolBarRender={false}
-            columns={errorColumns}
-            recordCreatorProps={{
-              newRecordType: "dataSource",
-              record: () => ({
-                id: Date.now(),
-              }),
-            }}
-            editable={{
-              type: "multiple",
-              editableKeys,
-              onChange: setEditableRowKeys,
-              actionRender: (row, _, dom) => {
-                return [dom.delete];
-              },
-            }}
-          />
-        </ProForm.Item>
+        <KnowledgePointList name="errorPoint" />
       </ProFormGroup>
       <ProFormGroup title="上课状态">
         <ProFormRate name="progressRate" />
@@ -174,27 +102,7 @@ export default () => {
         />
       </ProFormGroup>
       <ProFormGroup title="掌握情况">
-        <ProForm.Item name="masterPoint" trigger="onValuesChange">
-          <EditableProTable
-            rowKey="id"
-            toolBarRender={false}
-            columns={columns}
-            recordCreatorProps={{
-              newRecordType: "dataSource",
-              record: () => ({
-                id: Date.now(),
-              }),
-            }}
-            editable={{
-              type: "multiple",
-              editableKeys,
-              onChange: setEditableRowKeys,
-              actionRender: (row, _, dom) => {
-                return [dom.delete];
-              },
-            }}
-          />
-        </ProForm.Item>
+        <KnowledgePointList name="masterPoint" />
       </ProFormGroup>
       <ProFormGroup title="课后作业">
         <ProFormTextArea width="xl" label="课后作业" name="homeworkError" />

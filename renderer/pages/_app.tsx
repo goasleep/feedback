@@ -1,12 +1,9 @@
-import React from "react";
 import type { AppProps } from "next/app";
 import { Layout, Menu } from "antd";
 import { useRouter } from "next/router";
-import {
-  FundProjectionScreenOutlined,
-  SendOutlined,
-  EditOutlined,
-} from "@ant-design/icons";
+import { FundProjectionScreenOutlined, SendOutlined } from "@ant-design/icons";
+
+import React from "react";
 const { Sider, Content } = Layout;
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -28,6 +25,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const switchMenu = ({ item }) => {
     router.push(item.props.path);
   };
+
   return (
     <Layout style={{ height: "100vh" }}>
       <Sider theme="light" collapsible>
@@ -47,7 +45,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         </Content>
       </Layout>
     </Layout>
-    // </div>
   );
 }
 
