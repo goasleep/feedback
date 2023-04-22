@@ -2,7 +2,7 @@
   "private": true,
   "name": "feedback",
   "description": "My application description",
-  "version": "1.0.3",
+  "version": "1.0.6",
   "author": "smtih peng <pfgoasleep@foxmail.com>",
   "main": "app/background.js",
   "scripts": {

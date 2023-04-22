@@ -42,8 +42,10 @@ export default (props) => {
         <ProFormTimePicker
           name="timeRange"
           label="上课时间"
-          format={"HH:mm"}
           rules={[{ required: true }]}
+          fieldProps={{
+            format: "HH:mm:00",
+          }}
         />
       </ProForm>
       {selectKey && <ShowText name={selectKey}></ShowText>}

@@ -58,7 +58,8 @@ ipcMain.handle("getAllName", async (event) => {
     .get("docs")
     .map((item) => item.name)
     .value();
-  return doc;
+  const names = lo.uniq(doc);
+  return names;
 });
 
 ipcMain.handle("searchClass", async (event) => {

@@ -1,5 +1,5 @@
-import { Typography, Rate, Button, Table, message } from "antd";
-import React, { useRef, useState } from "react";
+import { Typography, Button, message, Space } from "antd";
+import React, { useRef } from "react";
 import { useGetFeedback } from "../hook/useGetFeedback";
 import { genKey } from "../util";
 import { ipcRenderer } from "electron";
@@ -8,7 +8,7 @@ import os from "os";
 import { DownloadOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 
-const { Title, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
 const progressStatusMap = [
   "注意力集中",
@@ -17,19 +17,6 @@ const progressStatusMap = [
   "紧跟老师思路",
   "思维活跃",
   "积极互动",
-];
-
-const columns = [
-  {
-    title: "知识点",
-    dataIndex: "title",
-    width: "25%",
-  },
-  {
-    title: "描述",
-    dataIndex: "desc",
-    width: "65%",
-  },
 ];
 
 export default ({ name }) => {
@@ -55,67 +42,112 @@ export default ({ name }) => {
     <div>
       <div ref={ref}>
         <Paragraph>
-          {feedbackData?.name} 家长您好。以下是{feedbackData?.date}
-          {"  "}
+          {feedbackData?.name} 家长您好，以下是{feedbackData?.date} &nbsp;
           {feedbackData?.timeRange[0]?.split(":")?.[0]}点 ~
           {feedbackData?.timeRange[1]?.split(":")?.[0]}点 化学课程的反馈
         </Paragraph>
-        <Title level={2}>课堂名称：{feedbackData?.classname}</Title>
-        <Title level={3}>上周作业完成情况: </Title>
-        <Paragraph>正确率：{feedbackData?.beforeAccuracy} %</Paragraph>
-        <Paragraph>
-          错误知识点
-          <ol>
-            {feedbackData?.errorPoint?.map((item) => (
-              <li key={genKey()}>
-                {item.title}: {item.desc}
-              </li>
-            ))}
-          </ol>
-        </Paragraph>
+        {feedbackData?.classname && <b>课堂名称：{feedbackData?.classname}</b>}
+        <br />
 
-        <Title level={3}>上课状态:</Title>
-        <Paragraph>
-          <ul>
-            {feedbackData?.progressStatus?.map((item) => (
-              <li key={genKey()}>{progressStatusMap[parseInt(item) - 1]}</li>
-            ))}
-          </ul>
-        </Paragraph>
-        <Paragraph>{progressStatusMap[feedbackData?.progressStatus]}</Paragraph>
+        {(feedbackData?.beforeAccuracy || feedbackData?.errorPoint) && (
+          <b>上周作业完成情况: </b>
+        )}
+        {feedbackData?.beforeAccuracy && (
+          <Paragraph>正确率：{feedbackData?.beforeAccuracy || 0} %</Paragraph>
+        )}
+        {feedbackData?.errorPoint && (
+          <Paragraph>
+            错误知识点
+            <ol>
+              {feedbackData?.errorPoint?.map((item) => (
+                <li key={genKey()}>
+                  {item.title}: {item.desc}
+                </li>
+              ))}
+            </ol>
+          </Paragraph>
+        )}
+
+        {feedbackData?.beforeClassPoint && (
+          <>
+            <b>课前小测</b>
+            {feedbackData?.beforeClassAccuracy && (
+              <Paragraph>
+                正确率：{feedbackData?.beforeClassAccuracy || 0} %
+              </Paragraph>
+            )}
+            <Paragraph>
+              <ol>
+                {feedbackData?.beforeClassPoint?.map((item) => (
+                  <li key={genKey()}>
+                    {item.title}: {item.desc}
+                  </li>
+                ))}
+              </ol>
+            </Paragraph>
+          </>
+        )}
+
+        {feedbackData?.progressStatus && (
+          <>
+            <b>上课状态:</b>
+            <Paragraph>
+              <ul>
+                {feedbackData?.progressStatus?.map((item) => (
+                  <li key={genKey()}>
+                    {progressStatusMap[parseInt(item) - 1]}
+                  </li>
+                ))}
+              </ul>
+            </Paragraph>
+            <Paragraph>
+              {progressStatusMap[feedbackData?.progressStatus]}
+            </Paragraph>
+          </>
+        )}
+
         <Paragraph>评分： {feedbackData?.progressRate}分，总分5分</Paragraph>
 
-        <Title level={3}> 掌握情况</Title>
-        <Paragraph>
-          <ol>
-            {feedbackData?.masterPoint?.map((item) => (
-              <li key={genKey()}>
-                {item.title}: {item.desc}
-              </li>
-            ))}
-          </ol>
-        </Paragraph>
-        <Title level={3}> 课后作业</Title>
-        <Paragraph>{feedbackData?.homeworkError} </Paragraph>
+        {feedbackData?.masterPoint && (
+          <>
+            <b> 掌握情况</b>
+            <Paragraph>
+              <ol>
+                {feedbackData?.masterPoint?.map((item) => (
+                  <li key={genKey()}>
+                    {item.title}: {item.desc}
+                  </li>
+                ))}
+              </ol>
+            </Paragraph>
+          </>
+        )}
+        {feedbackData?.homeworkError && (
+          <>
+            <b> 课后作业</b>
+            <Paragraph>{feedbackData?.homeworkError} </Paragraph>
+          </>
+        )}
       </div>
-
-      <Button
-        type="primary"
-        onClick={() => {
-          router.push({
-            pathname: "/edit",
-            query: { name: feedbackData.key },
-          });
-        }}
-      >
-        编辑
-      </Button>
-      <Button
-        type="primary"
-        shape="round"
-        icon={<DownloadOutlined />}
-        onClick={downloadPDF}
-      />
+      <Space>
+        <Button
+          type="primary"
+          onClick={() => {
+            router.push({
+              pathname: "/edit",
+              query: { name: feedbackData.key },
+            });
+          }}
+        >
+          编辑
+        </Button>
+        <Button
+          type="primary"
+          shape="round"
+          icon={<DownloadOutlined />}
+          onClick={downloadPDF}
+        />
+      </Space>
     </div>
   );
 };

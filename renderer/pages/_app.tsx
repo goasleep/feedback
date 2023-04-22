@@ -38,7 +38,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Sider>
 
       <Layout>
-        <Content style={{ overflow: "auto", scrollbarWidth: "none" }}>
+        <Content
+          style={{ overflow: "auto", scrollbarWidth: "none", paddingLeft: 20 }}
+        >
           <React.Fragment>
             <Component {...pageProps} />
           </React.Fragment>

@@ -85,6 +85,20 @@ export default () => {
         />
         <KnowledgePointList name="errorPoint" />
       </ProFormGroup>
+      <ProFormGroup title="课前小测">
+        <ProFormDigit
+          label="正确率"
+          name="beforeClassAccuracy"
+          fieldProps={{
+            min: 0,
+            max: 100,
+            defaultValue: 0,
+            formatter: (value) => `${value}%`,
+            parser: (value) => value?.replace("%", ""),
+          }}
+        />
+        <KnowledgePointList name="beforeClassPoint" />
+      </ProFormGroup>
       <ProFormGroup title="上课状态">
         <ProFormRate name="progressRate" />
         <ProFormSelect
