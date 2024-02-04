@@ -19,6 +19,8 @@ const progressStatusMap = [
   "积极互动",
 ];
 
+const ParentStatusMap = ["家长", "妈妈", "爸爸"];
+
 export default ({ name }) => {
   const feedbackData = useGetFeedback(name);
   const router = useRouter();
@@ -42,18 +44,23 @@ export default ({ name }) => {
     <div>
       <div ref={ref}>
         <Paragraph>
-          {feedbackData?.name} 家长您好，以下是{feedbackData?.date} &nbsp;
+          {feedbackData?.name}{" "}
+          {ParentStatusMap[parseInt(feedbackData?.parent || 1) - 1]}{" "}
+          您好，以下是
+          {feedbackData?.date} &nbsp;
           {feedbackData?.timeRange[0]?.split(":")?.[0]}点 ~
           {feedbackData?.timeRange[1]?.split(":")?.[0]}点 化学课程的反馈
         </Paragraph>
-        {feedbackData?.classname && <b>课堂名称：{feedbackData?.classname}</b>}
+        {feedbackData?.classname && (
+          <b style={{ fontSize: 20 }}>课堂名称：{feedbackData?.classname}</b>
+        )}
         <br />
 
         {(feedbackData?.beforeAccuracy || feedbackData?.errorPoint) && (
-          <b>上周作业完成情况: </b>
-        )}
-        {feedbackData?.beforeAccuracy && (
-          <Paragraph>正确率：{feedbackData?.beforeAccuracy || 0} %</Paragraph>
+          <span>
+            <b>上周作业完成情况 </b> 正确率：{feedbackData?.beforeAccuracy || 0}{" "}
+            %
+          </span>
         )}
         {feedbackData?.errorPoint && (
           <Paragraph>
@@ -70,13 +77,11 @@ export default ({ name }) => {
 
         {feedbackData?.beforeClassPoint && (
           <>
-            <b>课前小测</b>
-            {feedbackData?.beforeClassAccuracy && (
-              <Paragraph>
-                正确率：{feedbackData?.beforeClassAccuracy || 0} %
-              </Paragraph>
-            )}
+            <span>
+              <b>课前小测</b> 正确率：{feedbackData?.beforeClassAccuracy || 0} %
+            </span>
             <Paragraph>
+              错误知识点
               <ol>
                 {feedbackData?.beforeClassPoint?.map((item) => (
                   <li key={genKey()}>
@@ -90,27 +95,20 @@ export default ({ name }) => {
 
         {feedbackData?.progressStatus && (
           <>
-            <b>上课状态:</b>
+            <span>
+              <b>上课状态:</b> {feedbackData?.progressRate}分，总分5分
+            </span>
             <Paragraph>
-              <ul>
-                {feedbackData?.progressStatus?.map((item) => (
-                  <li key={genKey()}>
-                    {progressStatusMap[parseInt(item) - 1]}
-                  </li>
-                ))}
-              </ul>
-            </Paragraph>
-            <Paragraph>
-              {progressStatusMap[feedbackData?.progressStatus]}
+              {feedbackData?.progressStatus
+                ?.map((item) => progressStatusMap[parseInt(item) - 1])
+                ?.join(", ")}
             </Paragraph>
           </>
         )}
 
-        <Paragraph>评分： {feedbackData?.progressRate}分，总分5分</Paragraph>
-
         {feedbackData?.masterPoint && (
           <>
-            <b> 掌握情况</b>
+            <b>掌握情况</b>
             <Paragraph>
               <ol>
                 {feedbackData?.masterPoint?.map((item) => (
@@ -124,7 +122,7 @@ export default ({ name }) => {
         )}
         {feedbackData?.homeworkError && (
           <>
-            <b> 课后作业</b>
+            <b>课后作业</b>
             <Paragraph>{feedbackData?.homeworkError} </Paragraph>
           </>
         )}

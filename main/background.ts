@@ -39,6 +39,13 @@ ipcMain.handle("createFeedback", async (event, data) => {
   const doc = await db.get("docs").push(data).write();
   return doc;
 });
+
+ipcMain.handle("getFeedbacks", async (event) => {
+  const doc = await db.get("docs").value();
+  console.log(doc);
+  return doc;
+});
+
 ipcMain.handle("getFeedback", async (event, key) => {
   const doc = await db.get("docs").find({ key }).value();
   return doc;
@@ -73,6 +80,7 @@ ipcMain.handle("searchClass", async (event) => {
 });
 
 ipcMain.handle("searchKnowledge", async (event, keyword) => {
+  // 查询知识点
   const points = await db
     .get("docs")
     .map((item) =>
@@ -88,11 +96,15 @@ ipcMain.handle("searchKnowledge", async (event, keyword) => {
   }));
 });
 
-ipcMain.handle("searchKnowledgeDesc", async (event, keyword) => {
+ipcMain.handle("searchKnowledgeDesc", async (event, { keyword, title }) => {
+  // 查询知识点的描述
+  console.log(keyword);
+  console.log(title + ">>>>>");
   const points = await db
     .get("docs")
     .map((item) =>
       [...(item?.errorPoint || []), ...(item?.masterPoint || [])]
+        .filter((item) => item?.title === title)
         .map((item) => item.desc)
         .filter((item) => item?.includes(keyword))
     )

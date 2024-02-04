@@ -1,17 +1,20 @@
-import { Select } from "antd";
+import { Button, Select } from "antd";
 import { useState } from "react";
 import { useGetFeedbackKeys } from "../hook/useGetFeedback";
 import ShowText from "./showText";
 import { useRouter } from "next/router";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import {
   ProForm,
   ProFormDatePicker,
   ProFormTimePicker,
 } from "@ant-design/pro-components";
 export default (props) => {
-  const { query } = useRouter();
+  const router = useRouter();
+  const query = router.query;
   const options = useGetFeedbackKeys();
   const [selectKey, setSelectKey] = useState(query.name);
+
   return (
     <>
       <ProForm
@@ -20,7 +23,7 @@ export default (props) => {
           setSelectKey(value);
         }}
         submitter={{ searchConfig: { submitText: "搜索" } }}
-        initialValues={{ name: query.name }}
+        initialValues={{ name: query?.name?.split("_")[0] }}
         layout="horizontal"
       >
         <ProForm.Item name="name" label="姓名" rules={[{ required: true }]}>

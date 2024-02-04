@@ -50,6 +50,17 @@ export default () => {
             placeholder="请输入姓名"
             rules={[{ required: true }]}
           />
+          <ProFormSelect
+            width="md"
+            label="家长称呼"
+            initialValue={{ label: "家长", value: "1" }}
+            request={() => [
+              { label: "家长", value: "1" },
+              { label: "妈妈", value: "2" },
+              { label: "爸爸", value: "3" },
+            ]}
+            name="parent"
+          />
           <ProForm.Item
             name="classname"
             label="课堂名称"

@@ -1,10 +1,11 @@
 import { ProFormList, ProCard, ProForm } from "@ant-design/pro-components";
 import React from "react";
 import { CloseOutlined } from "@ant-design/icons";
-import { Input } from "antd";
+import { Input, Form } from "antd";
 import AutoCompleteSearch from "./AutoCompleteSearch";
 
 export default ({ name }) => {
+  const form = Form.useFormInstance();
   return (
     <ProFormList
       deleteIconProps={{
@@ -16,7 +17,7 @@ export default ({ name }) => {
       creatorButtonProps={{
         creatorButtonText: "添加知识点",
       }}
-      itemRender={({ action }) => (
+      itemRender={(props, listMeta) => (
         <ProCard
           bordered
           style={{ marginBlockEnd: 8 }}
@@ -28,13 +29,15 @@ export default ({ name }) => {
               />
             </ProForm.Item>
           }
-          extra={action}
+          extra={props.action}
           bodyStyle={{ paddingBlockEnd: 0 }}
         >
           <ProForm.Item name="desc" label="描述">
             <AutoCompleteSearch
               component={<Input.TextArea showCount autoSize />}
               searchKey="searchKnowledgeDesc"
+              form={form}
+              meta={listMeta}
             />
           </ProForm.Item>
         </ProCard>

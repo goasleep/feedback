@@ -33,3 +33,18 @@ export const useGetFeedbackKeys = () => {
 
   return feedback;
 };
+
+export const useGetFeedbacks = () => {
+  const [feedbacks, setFeedbacks] = useState([]);
+
+  React.useEffect(() => {
+    const getData = async () => {
+      const data = await ipcRenderer.invoke("getFeedbacks");
+      setFeedbacks(data);
+      console.log(data);
+    };
+    getData();
+  }, []);
+
+  return feedbacks;
+};
