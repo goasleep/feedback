@@ -19,7 +19,7 @@ const progressStatusMap = [
   "积极互动",
 ];
 
-const ParentStatusMap = ["家长", "妈妈", "爸爸"];
+const ParentStatusMap = ["", "家长", "妈妈", "爸爸"];
 
 export default ({ name }) => {
   const feedbackData = useGetFeedback(name);
@@ -44,8 +44,8 @@ export default ({ name }) => {
     <div>
       <div ref={ref}>
         <Paragraph>
-          {feedbackData?.name}{" "}
-          {ParentStatusMap[parseInt(feedbackData?.parent || 1) - 1]}{" "}
+          {feedbackData?.name}
+          {ParentStatusMap[parseInt(feedbackData?.parent || 0)]}
           您好，以下是
           {feedbackData?.date} &nbsp;
           {feedbackData?.timeRange[0]?.split(":")?.[0]}点 ~
@@ -55,13 +55,17 @@ export default ({ name }) => {
           <b style={{ fontSize: 20 }}>课堂名称：{feedbackData?.classname}</b>
         )}
         <br />
-
         {(feedbackData?.beforeAccuracy || feedbackData?.errorPoint) && (
           <span>
-            <b>上周作业完成情况 </b> 正确率：{feedbackData?.beforeAccuracy || 0}{" "}
-            %
+            <b>上周作业完成情况 </b>{" "}
+            {feedbackData?.beforeAccuracy ? (
+              <>正确率：{feedbackData?.beforeAccuracy || 0} %</>
+            ) : (
+              <></>
+            )}
           </span>
         )}
+
         {feedbackData?.errorPoint && (
           <Paragraph>
             错误知识点
@@ -78,7 +82,12 @@ export default ({ name }) => {
         {feedbackData?.beforeClassPoint && (
           <>
             <span>
-              <b>课前小测</b> 正确率：{feedbackData?.beforeClassAccuracy || 0} %
+              <b>课前小测</b>{" "}
+              {feedbackData?.beforeClassAccuracy ? (
+                <>正确率：{feedbackData?.beforeClassAccuracy || 0} %</>
+              ) : (
+                <></>
+              )}
             </span>
             <Paragraph>
               错误知识点

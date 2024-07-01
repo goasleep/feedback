@@ -53,8 +53,9 @@ export default () => {
           <ProFormSelect
             width="md"
             label="家长称呼"
-            initialValue={{ label: "家长", value: "1" }}
+            initialValue={{ label: "无", value: "0" }}
             request={() => [
+              { label: "无", value: "0" },
               { label: "家长", value: "1" },
               { label: "妈妈", value: "2" },
               { label: "爸爸", value: "3" },
@@ -96,6 +97,7 @@ export default () => {
               parser: (value) => value?.replace("%", ""),
             }}
           />
+          <KnowledgePointList name="errorPoint" />
         </ProFormGroup>
         <ProFormGroup title="课前小测">
           <ProFormDigit
